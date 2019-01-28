@@ -7,19 +7,19 @@ class Mortgage {
         variableInterestRate
     ) {
         this.capitalBorrowed = capitalBorrowed
+        this.initialCapitalBorrowed = capitalBorrowed
         this.years = years,
-            this.fixedInterestRate = fixedInterestRate,
-            this.yearsFixedRate = yearsFixedRate,
-            this.variableInterestRate = variableInterestRate
+        this.fixedInterestRate = fixedInterestRate,
+        this.yearsFixedRate = yearsFixedRate,
+        this.variableInterestRate = variableInterestRate
         this.NumberOfPayments = this.years * 12
         this.numberOfPaymentsMade = 0
-
     }
 
     get interestRate() {
         if (
             this.numberOfPaymentsMade > 0 &&
-            this.numberOfPaymentsMade >= this.yearsFixedRate * 12
+            this.numberOfPaymentsMade > this.yearsFixedRate * 12
         ) {
             return this.variableInterestRate / 100
         } else {
@@ -37,16 +37,15 @@ class Mortgage {
 
     get mortgagePayment() {
         let accumulatedInterestRate = Math.pow(1 + this.monthlyInterestRate, this.NumberOfPayments)
-        let monthlyPayments = (this.monthlyInterestRate * this.capitalBorrowed * accumulatedInterestRate) / (accumulatedInterestRate - 1)
+        let monthlyPayments = (this.monthlyInterestRate * this.initialCapitalBorrowed * accumulatedInterestRate) / (accumulatedInterestRate - 1)
         return Number(monthlyPayments.toFixed(2))
     }
 
     makePayment() {
-        console.log("Monthly payment: -> ", this.mortgagePayment)
-        console.log("interest payment -> ", this.monthlyInterestPayment)
         let actualDeductionFromCapital = Number(this.mortgagePayment - this.monthlyInterestPayment).toFixed(2)
-        console.log("actual: ", actualDeductionFromCapital)
-        this.capitalBorrowed -= actualDeductionFromCapital
+        this.capitalBorrowed = Number(this.capitalBorrowed - actualDeductionFromCapital).toFixed(2)
+        this.numberOfPaymentsMade += 1
+        console.log(`${this.numberOfPaymentsMade}, ${this.mortgagePayment} , ${actualDeductionFromCapital}, ${this.capitalBorrowed}` )
     }
 }
 
