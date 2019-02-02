@@ -8,9 +8,9 @@ let m = new Mortgage(
     variableInterestRate = 4.21
 )
 
-m.numberOfPaymentsMade = 24
-
-m.makePayment()
+// m.numberOfPaymentsMade = 24
+for (let i = 0; i < 12; i++)
+    m.makePayment()
 
 console.log(m.capitalBorrowed)
 
