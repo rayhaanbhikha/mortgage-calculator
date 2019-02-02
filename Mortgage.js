@@ -7,6 +7,7 @@ class Mortgage {
         this.years = years
         this.numberOfPayments = this.years * 12
         this.numberOfPaymentsMade = 0
+        this.overpayments = new Overpayments(this)
         this.interest = new Interest(
             this,
             fixedInterestRate,
@@ -35,12 +36,41 @@ class Mortgage {
         this.numberOfPaymentsMade += 1
 
         console.log(`
-        No. ${this.numberOfPaymentsMade}, 
-        Payment: ${payment} , 
-        Deduction: ${actualDeductionFromCapital},
-        InterestPaid: ${interestPaid},
+        No. ${this.numberOfPaymentsMade}
+        Payment: ${payment}
+        Deduction: ${actualDeductionFromCapital}
+        InterestPaid: ${interestPaid}
         Outstanding: ${this.capitalBorrowed}
         `)
+    }
+
+    makeOverPayment(overpayment) {
+        this.overpayments.payment(overpayment)
+    }
+}
+
+class Overpayments {
+    constructor(mortgage) {
+        this.mortgage = mortgage
+        this.numberOfOverpayments = 0
+        this.overpaymentTotal = 0
+        this.fines = 0
+    }
+
+    payment(overpaymentValue) {
+        this.numberOfOverpayments += 1
+        this.overpaymentTotal += overpaymentValue
+
+        // calculate fines
+
+
+        // Deduct from capital borrowed
+        this.deductFromCapital(overpaymentValue)
+
+    }
+
+    deductFromCapital(overpayment) {
+        this.mortgage.capitalBorrowed = Number(this.mortgage.capitalBorrowed - overpayment).toFixed(2)
     }
 }
 

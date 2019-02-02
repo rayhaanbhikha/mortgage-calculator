@@ -9,8 +9,10 @@ let m = new Mortgage(
 )
 
 // m.numberOfPaymentsMade = 24
-for (let i = 0; i < 12; i++)
+for (let i = 0; i < 12; i++) {
     m.makePayment()
+    m.makeOverPayment(200)
+}
 
 console.log(m.capitalBorrowed)
 
