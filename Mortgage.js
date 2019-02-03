@@ -6,7 +6,9 @@ class Mortgage {
     constructor({ capitalBorrowed, years, initialRate, variableRate }) {
         this.capitalBorrowed = capitalBorrowed
         this.initialCapitalBorrowed = capitalBorrowed
+
         this.years = years
+        this.currentMortgageYear = 0
         this.numberOfPayments = this.years * 12
         this.numberOfPaymentsMade = 0
 
@@ -27,25 +29,40 @@ class Mortgage {
         return Number(monthlyPayments.toFixed(2))
     }
 
-    makePayment() {
+    makePayment(overpayment = 0) {
         let payment = this.mortgagePayment
         let interestPaid = this.interest.monthlyInterestPayment
 
         let actualDeductionFromCapital = Number(payment - interestPaid).toFixed(2)
         this.capitalBorrowed = Number(this.capitalBorrowed - actualDeductionFromCapital).toFixed(2)
-        this.numberOfPaymentsMade += 1
+        this.makeOverPayment(overpayment)
+
+        this.incrementNumberOfPayments()
 
         this.payments.push({
             paymentNumber: this.numberOfPaymentsMade,
             payment,
-            actualContribution: actualDeductionFromCapital,
             interestPaid,
+            actualContribution: actualDeductionFromCapital,
+            overpayment,
             outstanding: this.capitalBorrowed
         })
     }
 
+    incrementNumberOfPayments(value = 1) {
+        this.numberOfPaymentsMade += value
+        if(this.numberOfPaymentsMade % 12 == 1) {
+            this.currentMortgageYear += 1
+            this.overpayments.newOverpaymentThreshold = this.capitalBorrowed
+            console.log(this.numberOfPaymentsMade, this.currentMortgageYear, this.overpayments.overpaymentThreshold)
+        }
+    }
+
     makeOverPayment(overpayment) {
-        this.overpayments.payment(overpayment)
+        if(overpayment > 0) {
+            this.overpayments.payment(overpayment)
+        }
+        return overpayment
     }
 }
 
