@@ -1,19 +1,19 @@
 const Interest = require('./Interest')
+const Overpayments = require('./Overpayments')
+
 
 class Mortgage {
-    constructor(capitalBorrowed, years, fixedInterestRate, yearsFixedRate, variableInterestRate) {
+    constructor({ capitalBorrowed, years, initialRate, variableRate }) {
         this.capitalBorrowed = capitalBorrowed
         this.initialCapitalBorrowed = capitalBorrowed
         this.years = years
         this.numberOfPayments = this.years * 12
         this.numberOfPaymentsMade = 0
+
         this.overpayments = new Overpayments(this)
-        this.interest = new Interest(
-            this,
-            fixedInterestRate,
-            yearsFixedRate,
-            variableInterestRate
-        )
+        this.interest = new Interest(this, initialRate, variableRate)
+
+        this.payments = []
     }
 
     get mortgagePayment() {
@@ -35,42 +35,17 @@ class Mortgage {
         this.capitalBorrowed = Number(this.capitalBorrowed - actualDeductionFromCapital).toFixed(2)
         this.numberOfPaymentsMade += 1
 
-        console.log(`
-        No. ${this.numberOfPaymentsMade}
-        Payment: ${payment}
-        Deduction: ${actualDeductionFromCapital}
-        InterestPaid: ${interestPaid}
-        Outstanding: ${this.capitalBorrowed}
-        `)
+        this.payments.push({
+            paymentNumber: this.numberOfPaymentsMade,
+            payment,
+            actualContribution: actualDeductionFromCapital,
+            interestPaid,
+            outstanding: this.capitalBorrowed
+        })
     }
 
     makeOverPayment(overpayment) {
         this.overpayments.payment(overpayment)
-    }
-}
-
-class Overpayments {
-    constructor(mortgage) {
-        this.mortgage = mortgage
-        this.numberOfOverpayments = 0
-        this.overpaymentTotal = 0
-        this.fines = 0
-    }
-
-    payment(overpaymentValue) {
-        this.numberOfOverpayments += 1
-        this.overpaymentTotal += overpaymentValue
-
-        // calculate fines
-
-
-        // Deduct from capital borrowed
-        this.deductFromCapital(overpaymentValue)
-
-    }
-
-    deductFromCapital(overpayment) {
-        this.mortgage.capitalBorrowed = Number(this.mortgage.capitalBorrowed - overpayment).toFixed(2)
     }
 }
 

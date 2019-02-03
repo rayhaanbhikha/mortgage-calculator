@@ -1,8 +1,8 @@
 class Interest {
-    constructor(mortgage, fixedInterestRate, yearsFixedRate, variableRate) {
+    constructor(mortgage, fixedInterest, variableRate) {
         this.mortgage = mortgage
-        this.fixedInterestRate = fixedInterestRate
-        this.yearsFixedRate = yearsFixedRate
+        this.fixedInterestRate = fixedInterest.interestRate
+        this.yearsFixedRate = fixedInterest.years
         this.variableRate = variableRate
     }
 
